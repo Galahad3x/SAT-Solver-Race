@@ -15,5 +15,9 @@ for i in {1..5}; do ./rnd-cnf-gen.py 300 300 70 > benchmarks/b$i.cnf; done
 for i in {1..5}; do ./rnd-cnf-gen.py $(($i*2)) $(($i*2)) $(($i*2)) > tests/t$i.cnf; done
 ```
 
+Benchmarks de grafs:
 
+```bash
+for i in {1..5}; do ./rnd-graph-gen.py 25 0.5 20 > benchmarks/g$i.cnf; done
+```
 
