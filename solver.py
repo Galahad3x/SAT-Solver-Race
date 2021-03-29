@@ -73,4 +73,10 @@ if __name__ in "__main__":
 	# Resoldre amb algoritme
 
 	# Printar solucio
+	if not formula.is_sat():
+		# Printar INSAT
+		pass
+	else:
+		# Printar SAT i MODEL
+		pass
 	pass
