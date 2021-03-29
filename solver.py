@@ -1,6 +1,6 @@
 # SAT Solver
 # Joel Aumedes 48051307Y
-# Joel Farré 69420777X
+# Joel Farré 78103400T
 
 import sys
 
