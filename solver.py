@@ -5,8 +5,8 @@
 import sys
 
 
-def is_true(lit, int):
-	return (lit > 0 and int) or (lit < 0 and not int)
+def is_true(lit, intr):
+	return (lit > 0 and intr) or (lit < 0 and not intr) or (lit < 0 and intr is None)
 
 
 class Formula:
@@ -22,6 +22,24 @@ class Formula:
 			if not cl.is_sat(interpretation):
 				return False
 		return True
+
+	def solve(self):
+		interpretation = [None] * self.num_vars
+		while not self.is_sat(interpretation):
+			for cl in self.clauses:
+				if cl.is_sat(interpretation):
+					continue
+				else:
+					for lit in cl.literals:
+						if lit < 0 and interpretation[abs(lit) - 1] is True:
+							interpretation[abs(lit) - 1] = False
+							break
+						elif lit > 0 and interpretation[abs(lit) - 1] is None:
+							interpretation[abs(lit) - 1] = True
+							break
+					else:
+						return None
+		return interpretation
 
 
 class Clause:
@@ -60,7 +78,7 @@ def prova():
 	my_c2 = Clause([1, -2])
 	my_f = Formula([my_c, my_c2])
 	print(my_f.is_sat([True, True]))
-	print(my_f.is_sat([False, True]))
+	print(my_f.is_sat([None, True]))
 
 
 if __name__ in "__main__":
@@ -68,9 +86,9 @@ if __name__ in "__main__":
 		print("ERROR: Atributs")
 		sys.exit(-1)
 	formula = read_file(sys.argv[1])
-	print("DONE")
 	# Comprovar casos extrems (Formula buida es SAT, Formula amb clausula buida es INSAT)
 	# Resoldre amb algoritme
+	result = formula.solve()
 
 	# Printar solucio
-	pass
+	print(result)
