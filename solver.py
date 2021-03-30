@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 # SAT Solver
 # Joel Aumedes 48051307Y
 # Joel Farré 78103400T
@@ -91,10 +93,10 @@ def printSolution(result):
 
 def transcriptSolution(result):
 	solution = []
-	for i in range(len(result)):
-		if result[i] is not True:
+	for i, elem in enumerate(result):
+		if elem is not True:
 			solution.append(str(-(i + 1)))
-		elif result[i] is True:
+		elif elem is True:
 			solution.append(str(i + 1))
 	solution.append("0")
 	return solution
