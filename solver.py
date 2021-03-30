@@ -80,6 +80,25 @@ def prova():
 	print(my_f.is_sat([True, True]))
 	print(my_f.is_sat([None, True]))
 
+def printSolution(result):
+	print("c J&J Solver")
+	if result is None:
+		print("s UNSATISFIABLE")
+	else:
+		print("s SATISFIABLE")
+		print("v " + " ".join(transcriptSolution(result)))
+
+
+def transcriptSolution(result):
+	solution = []
+	for i in range(len(result)):
+		if result[i] is not True:
+			solution.append(str(-(i + 1)))
+		elif result[i] is True:
+			solution.append(str(i + 1))
+	solution.append("0")
+	return solution
+
 
 if __name__ in "__main__":
 	if len(sys.argv) < 2:
@@ -91,4 +110,4 @@ if __name__ in "__main__":
 	result = formula.solve()
 
 	# Printar solucio
-	print(result)
+	printSolution(result)
