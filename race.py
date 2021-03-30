@@ -117,7 +117,7 @@ if __name__ == '__main__' :
         sys.stdout.flush()
         # Run the solver under limits
         with open(out_file, 'w') as output:
-            subprocess.run(['time', '-p', './%s' % limits_file, solver, bf], stdout = output, stderr = subprocess.STDOUT)
+            subprocess.run(['time', '-p', './%s' % limits_file, solver, bf], stdout = output, stderr = subprocess.STDOUT, shell = True)
         #Check result
         correct = check_correctness(bf, out_file)
         if correct == True: # The solution is correct
