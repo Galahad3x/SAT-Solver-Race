@@ -8,7 +8,7 @@ import sys
 
 
 def is_true(lit, intr):
-	return (lit > 0 and intr) or (lit < 0 and not intr) or (lit < 0 and intr is None)
+	return (lit > 0 and intr is True) or (lit < 0 and intr is not True)
 
 
 class Formula:
@@ -52,10 +52,13 @@ class Clause:
 		if len(self.literals) == 0:
 			return False
 		for lit in self.literals:
+			# print(lit, abs(lit) - 1, interpretation[abs(lit) - 1])
 			if is_true(lit, interpretation[abs(lit) - 1]):
 				return True
 		return False
 
+def getClauseLen(cl):
+	return len(cl.literals)
 
 def read_file(filename):
 	if filename is None or not filename.endswith(".cnf"):
@@ -64,15 +67,17 @@ def read_file(filename):
 	clauses = []
 	with open(filename, "r") as f:
 		for line in f.readlines():
-			ln = line.rstrip(' 0 \n').split(" ")
+			ln = line.rstrip('\n').split(" ")
 			if ln[0].startswith("c"):
 				continue
 			if ln[0].startswith("p"):
 				num_vars = int(ln[2])
 				num_clauses = int(ln[3])
 			else:
+				ln = ln[:-1]
 				clauses.append(Clause([int(elem) for elem in ln]))
-	return Formula(clauses, num_vars, num_clauses)
+
+	return Formula(list(sorted(clauses, key=getClauseLen, reverse=True)), num_vars, num_clauses)
 
 
 def prova():
@@ -81,6 +86,7 @@ def prova():
 	my_f = Formula([my_c, my_c2])
 	print(my_f.is_sat([True, True]))
 	print(my_f.is_sat([None, True]))
+
 
 def printSolution(result):
 	print("c J&J Solver")
