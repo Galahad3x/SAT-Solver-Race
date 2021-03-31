@@ -7,16 +7,19 @@
 import sys
 
 
+# Checks if a literal evaluates as True
 def is_true(lit, intr):
 	return (lit > 0 and intr is True) or (lit < 0 and intr is not True)
 
 
+# Modelization of a formula as a list of clauses
 class Formula:
 	def __init__(self, clauses=None, num_vars=0, num_clauses=0):
 		self.clauses = clauses
 		self.num_vars = num_vars
 		self.num_clauses = num_clauses
 
+	# Check if an interpretation satisfies the formula
 	def is_sat(self, interpretation=None):
 		if len(self.clauses) == 0:
 			return True
@@ -25,6 +28,7 @@ class Formula:
 				return False
 		return True
 
+	# Finds if a formula is SAT or UNSAT, and finds a model if possible
 	def solve(self):
 		interpretation = [None] * self.num_vars
 		while not self.is_sat(interpretation):
@@ -44,10 +48,12 @@ class Formula:
 		return interpretation
 
 
+# Modelization of a clause as a list of literals
 class Clause:
 	def __init__(self, literals=None):
 		self.literals = literals
 
+	# Check if an interpretation satisfies the clause
 	def is_sat(self, interpretation=None):
 		if len(self.literals) == 0:
 			return False
@@ -57,9 +63,13 @@ class Clause:
 				return True
 		return False
 
+
+# Returns length of a clause
 def getClauseLen(cl):
 	return len(cl.literals)
 
+
+# Read the input file into a formula
 def read_file(filename):
 	if filename is None or not filename.endswith(".cnf"):
 		print("ERROR: Nom de fitxer dolent")
@@ -80,14 +90,7 @@ def read_file(filename):
 	return Formula(list(sorted(clauses, key=getClauseLen, reverse=True)), num_vars, num_clauses)
 
 
-def prova():
-	my_c = Clause([1, 2])
-	my_c2 = Clause([1, -2])
-	my_f = Formula([my_c, my_c2])
-	print(my_f.is_sat([True, True]))
-	print(my_f.is_sat([None, True]))
-
-
+# Prints the solution found in the correct format
 def printSolution(result):
 	print("c J&J Solver")
 	if result is None:
@@ -97,6 +100,7 @@ def printSolution(result):
 		print("v " + " ".join(transcriptSolution(result)))
 
 
+# Creates a list of literals from a list of booleans
 def transcriptSolution(result):
 	solution = []
 	for i, elem in enumerate(result):
@@ -108,14 +112,13 @@ def transcriptSolution(result):
 	return solution
 
 
+# Main program
 if __name__ in "__main__":
 	if len(sys.argv) < 2:
 		print("ERROR: Atributs")
 		sys.exit(-1)
 	formula = read_file(sys.argv[1])
-	# Comprovar casos extrems (Formula buida es SAT, Formula amb clausula buida es INSAT)
-	# Resoldre amb algoritme
+
 	result = formula.solve()
 
-	# Printar solucio
 	printSolution(result)
