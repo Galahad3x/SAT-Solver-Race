@@ -87,6 +87,7 @@ def read_file(filename):
 				ln = ln[:-1]
 				clauses.append(Clause([int(elem) for elem in ln]))
 
+	clauses = list(set(clauses))
 	return Formula(list(sorted(clauses, key=getClauseLen, reverse=True)), num_vars, num_clauses)
 
 
