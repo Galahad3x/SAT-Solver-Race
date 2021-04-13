@@ -37,14 +37,16 @@ class Formula:
 					continue
 				else:
 					for lit in cl.literals:
-						if lit < 0 and interpretation[abs(lit) - 1] is True:
-							interpretation[abs(lit) - 1] = False
-							break
-						elif lit > 0 and interpretation[abs(lit) - 1] is None:
+						if lit > 0 and interpretation[abs(lit) - 1] is None:
 							interpretation[abs(lit) - 1] = True
 							break
 					else:
-						return None
+						for lit in cl.literals:
+							if lit < 0 and interpretation[abs(lit) - 1] is True:
+								interpretation[abs(lit) - 1] = False
+								break
+						else:
+							return None
 		return interpretation
 
 
@@ -85,7 +87,7 @@ def read_file(filename):
 				num_clauses = int(ln[3])
 			else:
 				ln = ln[:-1]
-				clauses.append(Clause([int(elem) for elem in ln]))
+				clauses.append(Clause(list(sorted([int(elem) for elem in ln]))))
 
 	clauses = list(set(clauses))
 	return Formula(list(sorted(clauses, key=getClauseLen, reverse=True)), num_vars, num_clauses)
