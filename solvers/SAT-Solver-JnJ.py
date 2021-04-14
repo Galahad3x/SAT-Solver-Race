@@ -5,8 +5,6 @@
 # Joel Farré 78103400T
 
 import sys
-import random
-import os
 
 
 # Checks if a literal evaluates as True
@@ -20,21 +18,15 @@ class Formula:
 		self.clauses = clauses
 		self.num_vars = num_vars
 		self.num_clauses = num_clauses
-		self.neighbour_nums = min(getClauseLen(self.clauses[0]),50)
-		self.max_tries=1500000
 
 	# Check if an interpretation satisfies the formula
 	def is_sat(self, interpretation=None):
-		insats = 0
 		if len(self.clauses) == 0:
 			return True
 		for cl in self.clauses:
 			if not cl.is_sat(interpretation):
-				insats += 1
-		if insats == 0:
-			return True, 0
-		else:
-			return False, len(self.clauses) - insats
+				return False
+		return True
 
 	# Finds if a formula is SAT or UNSAT, and finds a model if possible
 	def solve(self):
@@ -56,42 +48,6 @@ class Formula:
 						else:
 							return None
 		return interpretation
-		
-	def solve_steepest(self, interpretation=None, total_tries=0):
-		if interpretation is None:
-			interpretation = [None] * self.num_vars
-		while total_tries < 150000:
-			sat_val = self.is_sat(interpretation)
-			if sat_val[0]:
-				return interpretation
-			else:
-				best_inter_index = None
-				best_res = sat_val
-				for i in range(self.neighbour_nums):
-					random_index = random.randint(0, len(interpretation) - 1)
-					if interpretation[random_index] is not True:
-						interpretation[random_index] = True
-					else:
-						interpretation[random_index] = False
-					current_val = self.is_sat(interpretation)
-					if current_val[0]:
-						return interpretation
-					elif current_val < best_res:
-						best_inter_index = random_index
-						best_res = current_val[1]
-					if interpretation[random_index] is not True:
-						interpretation[random_index] = True
-					else:
-						interpretation[random_index] = False
-				if best_inter_index == None:
-					total_tries += self.neighbour_nums
-				else:
-					if interpretation[best_inter_index] is not True:
-						interpretation[best_inter_index] = True
-					else:
-						interpretation[best_inter_index] = False
-					total_tries += self.neighbour_nums
-				
 
 
 # Modelization of a clause as a list of literals
@@ -161,12 +117,11 @@ def transcriptSolution(result):
 
 # Main program
 if __name__ in "__main__":
-	random.seed()
 	if len(sys.argv) < 2:
 		print("ERROR: Atributs")
 		sys.exit(-1)
 	formula = read_file(sys.argv[1])
 
-	result = formula.solve_steepest()
+	result = formula.solve()
 
 	printSolution(result)
